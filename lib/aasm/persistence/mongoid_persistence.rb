@@ -97,7 +97,7 @@ module AASM
       private
 
         def aasm_update_column(name, value)
-          set("#{self.class.aasm(name).attribute_name}": value)
+          set({"#{self.class.aasm(name).attribute_name}" => value})
 
           true
         end
