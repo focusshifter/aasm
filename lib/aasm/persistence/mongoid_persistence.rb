@@ -97,7 +97,11 @@ module AASM
       private
 
         def aasm_update_column(name, value)
-          set({"#{self.class.aasm(name).attribute_name}" => value})
+          if Mongoid::VERSION.to_f >= 4
+            set({"#{self.class.aasm(name).attribute_name}" => value})
+          else
+            set("#{self.class.aasm(name).attribute_name}", value)
+          end
 
           true
         end
