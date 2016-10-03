@@ -61,7 +61,7 @@ module AASM
         # NOTE: intended to be called from an event
         def aasm_write_state(state, name=:default)
           old_value = read_attribute(self.class.aasm(name).attribute_name)
-          aasm_write_attribute state, name
+          aasm_write_attribute(state, name)
 
           success = if aasm_skipping_validations(name)
                       value = aasm_raw_attribute_value(state, name)
@@ -97,10 +97,12 @@ module AASM
       private
 
         def aasm_update_column(name, value)
+          attribute_name = self.class.aasm(name).attribute_name
+
           if Mongoid::VERSION.to_f >= 4
-            set({"#{self.class.aasm(name).attribute_name}" => value})
+            set(Hash[attribute_name, value])
           else
-            set("#{self.class.aasm(name).attribute_name}", value)
+            set(attribute_name, value)
           end
 
           true
